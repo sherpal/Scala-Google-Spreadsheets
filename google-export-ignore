@@ -1,0 +1,3 @@
+// List of files that should not be taken into account when exporting methods to Google functions.
+
+ExportedFunctions.scala
