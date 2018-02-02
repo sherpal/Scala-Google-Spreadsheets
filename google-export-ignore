@@ -1,3 +1,5 @@
 // List of files that should not be taken into account when exporting methods to Google functions.
 
-ExportedFunctions.scala
+// Remove the `//` in the two next lines in order to ignore the functions in the tutorial package
+// ExportedFunctions.scala
+// GoogleGettingStarted.scala

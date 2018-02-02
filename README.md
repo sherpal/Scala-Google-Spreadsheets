@@ -9,7 +9,7 @@ It simply uses [Scala.js](https://www.scala-js.org/) for translating your Scala 
 ### Crash course
 
 - Clone this repository
-- [Export your functions](https://www.scala-js.org/doc/interoperability/export-to-javascript.html/#exporting-top-level-methods) into the JavaScript global scope using the `@JSExportTopLevel("exported.FCTNAME")` annotation. Mind the `exported.` in the annotation. Function name need not be upper case, but it will be transformed into upper case for Google function.
+- [Export your functions](https://www.scala-js.org/doc/interoperability/export-to-javascript.html#exporting-top-level-methods) into the JavaScript global scope using the `@JSExportTopLevel("exported.FCTNAME")` annotation. Mind the `exported.` in the annotation. Function name need not be upper case, but it will be transformed into upper case for Google function.
 - Use the `fastCompileCreateFunctions` (or `fullCompileCreateFunctions` for full optimization) sbt task.
 - Copy-paste the google.js file into [Spread Sheet Script Editor](https://developers.google.com/apps-script/guides/sheets/functions#creating_a_custom_function) and save it.
 - You can now use your functions into Google Spreadsheet.

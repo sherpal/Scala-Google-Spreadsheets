@@ -35,13 +35,19 @@ final case class Cell(value: Data) {
 
   def toDouble: Double = (value: Any) match {
     case value: Double => value
-    case _ => throw new WrongDataTypeException(s"value data type is ${value.getClass}, but should be Double.")
+    case value: Int => value
+    case _ => throw new WrongDataTypeException(s"value ($value) data type is ${value.getClass}, but should be Double.")
   }
 
   def toInt: Int = (value: Any) match {
     case value: Double => value.toInt
     case value: String => value.toInt
     case _ => throw new WrongDataTypeException(s"value data type is ${value.getClass}, but should be Int.")
+  }
+
+  def toDate: js.Date = value match {
+    case value: js.Date => value
+    case _ => throw new WrongDataTypeException(s"value data type is ${value.getClass}, but should be js.Date.")
   }
 
 }
