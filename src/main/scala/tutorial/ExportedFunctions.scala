@@ -176,7 +176,7 @@ object ExportedFunctions {
    * Each row of the Y matrix must be an array of one element corresponding to the X data.
    */
   @JSExportTopLevel("exported.LINEARREGRESSION")
-  private def linearRegression(
+  def linearRegression(
                         trainingDataX: js.Array[js.Array[Data]],
                         trainingDataY: js.Array[js.Array[Data]]
                       ): js.Array[js.Array[Data]] =
