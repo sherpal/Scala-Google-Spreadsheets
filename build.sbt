@@ -2,18 +2,12 @@ name := "ScalaSpreadSheets"
 
 version := "0.1"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.13.0"
 
 val fastCompileRenderer = taskKey[File]("Return main file")
 lazy val fastCompileCreateFunctions = taskKey[Unit]("Fast compile, and adds to the compiled file the created functions")
 val fullCompileRenderer = taskKey[File]("Return full optimized main file")
 lazy val fullCompileCreateFunctions = taskKey[Unit]("Full compile, and adds to the compiled file the created functions")
-
-val commonSettings = Seq(
-  version := "0.0.1",
-  scalaVersion := "2.12.4",
-  scalacOptions ++= Seq("-deprecation", "-feature", "-encoding", "utf-8")
-)
 
 
 /**
@@ -70,6 +64,7 @@ def exploreFileForFunctions(directory: File): List[String] = {
   }
 
   // search for all relevant information for building the Google functions
+  @scala.annotation.tailrec
   def constructInformation(
                             lines: List[String],
                             lineIdx: Int,
@@ -92,6 +87,7 @@ def exploreFileForFunctions(directory: File): List[String] = {
       } else if (line.contains("@JSExportTopLevel(\"exported.")) { // need to add a function
         """(?<=\"exported\.).+?(?=\")""".r.findFirstIn(line) match {
           case Some(functionName) => // found correct export function name, look for function arguments
+            @scala.annotation.tailrec
             def findFunction(lines: List[String], lineNbr: Int, fctInfo: String): (List[String], Int) = {
               """(?<=\().*?(?=\))""".r.findFirstIn(fctInfo) match {
                 case Some(args) => // here args is a string of the form "arg1: T1, arg2: T2, arg3: T3"
@@ -207,9 +203,7 @@ fullCompileCreateFunctions := {
 
 
 lazy val `renderer` = project.in(file("."))
-  .enablePlugins(JSDependenciesPlugin)
   .enablePlugins(ScalaJSPlugin)
-  .settings(commonSettings)
   .settings(
     fastCompileRenderer := {
       (fastOptJS in Compile).value.data
