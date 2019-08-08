@@ -19,7 +19,7 @@ object GoalsTesting {
    * Access to Google Analytics from the spreadsheets has to be enabled. See, e.g.,
    * https://developers.google.com/analytics/solutions/articles/reporting-apps-script
    */
-  @JSExportTopLevel("exported.findListOfGoals")
+  @JSExportTopLevel("findListOfGoals")
   def findListOfGoals(): Unit = {
     val listResponse = Goals.list("~all", "~all", "~all")
 

@@ -22,7 +22,7 @@ import scala.scalajs.js.annotation.JSExportTopLevel
  */
 object GoogleGettingStarted {
 
-  @JSExportTopLevel("exported.DOUBLE")
+  @JSExportTopLevel("DOUBLE")
   def double(x: Double): Double = 2 * x
 
   /**
@@ -31,7 +31,7 @@ object GoogleGettingStarted {
    * @param xs input The value or range of cells to multiply.
    * @return The input multiplied by 2.
    */
-  @JSExportTopLevel("exported.DOUBLE")
+  @JSExportTopLevel("DOUBLE")
   def double(xs: js.Array[js.Array[Data]]): js.Array[js.Array[Data]] =
     xs.map(_.map(_.asInstanceOf[Double] * 2).map(_.asInstanceOf[Data]))
 
@@ -44,7 +44,7 @@ object GoogleGettingStarted {
    * @return Two columns of data representing posts on the G Suite
    *     Developer blog.
    */
-  @JSExportTopLevel("exported.GETBLOGPOSTS")
+  @JSExportTopLevel("GETBLOGPOSTS")
   def getBlogPosts(): js.Array[js.Array[String]] = {
 
     val url = "https://gsuite-developers.googleblog.com/atom.xml"

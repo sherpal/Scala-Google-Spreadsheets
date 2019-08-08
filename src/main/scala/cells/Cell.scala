@@ -64,11 +64,11 @@ object Cell {
   def toJSArray(cells: Seq[Seq[Cell]]): js.Array[js.Array[Data]] =
     cells.map(_.map(_.value).toJSArray).toJSArray
 
-  implicit def fromJSArray(cells: js.Array[js.Array[Data]]): Vector[Vector[Cell]] =
-    js.Any.jsArrayOps(cells).toVector.map(fromJSFlatArray)
+  def fromJSArray(cells: js.Array[js.Array[Data]]): Vector[Vector[Cell]] =
+    cells.toList.map(fromJSFlatArray).toVector
 
-  implicit def fromJSFlatArray(cells: js.Array[Data]): Vector[Cell] =
-    js.Any.jsArrayOps(cells).toVector.map(new Cell(_))
+  def fromJSFlatArray(cells: js.Array[Data]): Vector[Cell] =
+    cells.toVector.map(new Cell(_))
 
   implicit def fromDouble(x: Double): Cell = Cell(x)
 
@@ -78,7 +78,7 @@ object Cell {
 
   implicit def fromBoolean(b: Boolean): Cell = Cell(b)
 
-  implicit def fromJS(value: Data): Cell = Cell(value)
+  //implicit def fromJS(value: Data): Cell = Cell(value)
 
   implicit class VectorToJS(cells: Vector[Vector[Cell]]) {
 

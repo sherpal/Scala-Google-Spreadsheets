@@ -48,7 +48,7 @@ def exploreFileForFunctions(directory: File): List[String] = {
     }
 
     def toGoogleFunction: List[String] = List(
-      s"function ${functionName.toUpperCase}($args) { return exported.$functionName($args) }"
+      s"function ${functionName.toUpperCase}($args) { return $functionName($args) }"
     )
 
     def toGoogleFunction(comments: List[String]): List[String] =
@@ -56,7 +56,7 @@ def exploreFileForFunctions(directory: File): List[String] = {
 
 
     def toOverloadedGoogleFunction: List[String] = List(
-      s"function ${functionName.toUpperCase}() { return exported.$functionName.apply(void 0, arguments) }"
+      s"function ${functionName.toUpperCase}() { return $functionName.apply(void 0, arguments) }"
     )
 
     def toOverloadedGoogleFunction(comments: List[String]): List[String] =
@@ -84,8 +84,8 @@ def exploreFileForFunctions(directory: File): List[String] = {
         constructInformation(
           restOfTheLine +: lines.drop(endOfCommentsIdx + 1), lineIdx + endOfCommentsIdx, information :+ comments
         )
-      } else if (line.contains("@JSExportTopLevel(\"exported.")) { // need to add a function
-        """(?<=\"exported\.).+?(?=\")""".r.findFirstIn(line) match {
+      } else if (line.contains("@JSExportTopLevel(\"")) { // need to add a function
+        """(?<=\").+?(?=\")""".r.findFirstIn(line) match {
           case Some(functionName) => // found correct export function name, look for function arguments
             @scala.annotation.tailrec
             def findFunction(lines: List[String], lineNbr: Int, fctInfo: String): (List[String], Int) = {
@@ -107,7 +107,7 @@ def exploreFileForFunctions(directory: File): List[String] = {
             }
 
             val annotationRemoved = lines.head.drop(
-              """@JSExportTopLevel\(\"exported\..+?\"\)""".r.findFirstIn(lines.head).get.length
+              """@JSExportTopLevel\(\".+?\"\)""".r.findFirstIn(lines.head).get.length
             )
             val (arguments, lineNbr) = findFunction(annotationRemoved +: lines.tail, 0, "")
 
@@ -205,6 +205,7 @@ fullCompileCreateFunctions := {
 lazy val `renderer` = project.in(file("."))
   .enablePlugins(ScalaJSPlugin)
   .settings(
+    scalaJSLinkerConfig in ThisBuild ~= { _.withESFeatures(_.withUseECMAScript2015(false)) },
     fastCompileRenderer := {
       (fastOptJS in Compile).value.data
     },

@@ -19,7 +19,7 @@ object ExportedFunctions {
    * @param xs {number} the cells to take the mean of
    * @return {number} the mean
    */
-  @JSExportTopLevel("exported.MEAN")
+  @JSExportTopLevel("MEAN")
   def mean(xs: js.Array[js.Array[Data]]): Double = {
     val flat = xs.flatten.map((_: Any) match {
       case s: String if s == "" => 0.0
@@ -28,7 +28,7 @@ object ExportedFunctions {
     flat.sum / flat.length
   }
 
-  @JSExportTopLevel("exported.MEAN")
+  @JSExportTopLevel("MEAN")
   def mean(x: Double): Double = x
 
   /**
@@ -36,7 +36,7 @@ object ExportedFunctions {
    *
    * @param seconds {number} the number of seconds
    */
-  @JSExportTopLevel("exported.SECONDSTOMINUTESECONDS")
+  @JSExportTopLevel("SECONDSTOMINUTESECONDS")
   def seconds2MinuteSeconds(seconds: Double): String = {
     val roundedSeconds = math.round(seconds)
     val s = roundedSeconds % 60
@@ -49,7 +49,7 @@ object ExportedFunctions {
    *
    * We consider only elements that are Double by filtering on the isNumeric method.
    */
-  @JSExportTopLevel("exported.CUSTOMSUM")
+  @JSExportTopLevel("CUSTOMSUM")
   def sum(elems: js.Array[js.Array[Data]]): Double = {
     Cell.fromJSArray(elems).flatten.filter(_.isNumeric).map(_.toDouble).sum
   }
@@ -85,7 +85,7 @@ object ExportedFunctions {
       val hadBirthday: Boolean = now.getMonth > dateOfBirth.getMonth ||
         (now.getMonth == dateOfBirth.getMonth && now.getDay >= dateOfBirth.getDay)
 
-      now.getFullYear() - dateOfBirth.getFullYear() + (if (hadBirthday) 0 else -1)
+      now.getFullYear().toInt - dateOfBirth.getFullYear().toInt + (if (hadBirthday) 0 else -1)
     }
 
     def toRow: Vector[Cell] = Vector(
@@ -105,7 +105,7 @@ object ExportedFunctions {
    * Returns a table containing only the adults in the data.
    * An adult is a person whose age is at least 18.
    */
-  @JSExportTopLevel("exported.GETADULTS")
+  @JSExportTopLevel("GETADULTS")
   def adults(data: js.Array[js.Array[Data]]): js.Array[js.Array[Data]] =
     Cell.fromJSArray(data).map(rowToPerson).filter(_.age >= 18).map(_.toRow).toGoogleCells
 
@@ -113,7 +113,7 @@ object ExportedFunctions {
    * Returns a table containing the adults whose income is above the average of income.
    * The last row also contains the average income, for reference.
    */
-  @JSExportTopLevel("exported.ABOVEINCOMEAVERAGE")
+  @JSExportTopLevel("ABOVEINCOMEAVERAGE")
   def aboveIncomeAverage(data: js.Array[js.Array[Data]]): js.Array[js.Array[Data]] = {
     val persons = Cell.fromJSArray(data).map(rowToPerson)
     val adults = persons.filter(_.age >= 18)
@@ -175,7 +175,7 @@ object ExportedFunctions {
    * Each row of the X matrix must be one data.
    * Each row of the Y matrix must be an array of one element corresponding to the X data.
    */
-  @JSExportTopLevel("exported.LINEARREGRESSION")
+  @JSExportTopLevel("LINEARREGRESSION")
   def linearRegression(
                         trainingDataX: js.Array[js.Array[Data]],
                         trainingDataY: js.Array[js.Array[Data]]
@@ -201,7 +201,7 @@ object ExportedFunctions {
    * regression. This is probably a bad model, since there is no reason why income should be proportional to the age,
    * and not quadratic of sub-linear.
    */
-  @JSExportTopLevel("exported.PREDICTINCOMEATAGE")
+  @JSExportTopLevel("PREDICTINCOMEATAGE")
   def predictIncomeAtAge(data: js.Array[js.Array[Data]], age: Int): Double = {
     val persons = Cell.fromJSArray(data).map(rowToPerson)
     val adults = persons.filter(_.age >= 18)
