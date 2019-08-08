@@ -9,7 +9,7 @@ It simply uses [Scala.js](https://www.scala-js.org/) for translating your Scala 
 ### Crash course
 
 - Clone this repository
-- [Export your functions](https://www.scala-js.org/doc/interoperability/export-to-javascript.html#exporting-top-level-methods) into the JavaScript global scope using the `@JSExportTopLevel("exported.FCTNAME")` annotation. Mind the `exported.` in the annotation. Function name need not be upper case, but it will be transformed into upper case for Google function.
+- [Export your functions](https://www.scala-js.org/doc/interoperability/export-to-javascript.html#exporting-top-level-methods) into the JavaScript global scope using the `@JSExportTopLevel("FCTNAME")` annotation. Function name need not be upper case, but it will be transformed into upper case for Google function.
 - Use the `fastCompileCreateFunctions` (or `fullCompileCreateFunctions` for full optimization) sbt task.
 - Copy-paste the google.js file into [Spread Sheet Script Editor](https://developers.google.com/apps-script/guides/sheets/functions#creating_a_custom_function) and save it.
 - You can now use your functions within Google Spreadsheet.
@@ -24,7 +24,7 @@ Other examples are presented in the `ExportedFunctions.scala` file.
 
 #### Exporting a function
 
-In order to export a method of an object as Google custom function, you must add the annotation `@JSExportTopLevel` before the function definition. The argument of the annotation must be of the form `exported.FCTNAME` for a method you would like to be exported as `FCTNAME` in the spreadsheets.
+In order to export a method of an object as Google custom function, you must add the annotation `@JSExportTopLevel` before the function definition. The argument of the annotation must be of the form `FCTNAME` for a method you would like to be exported as `FCTNAME` in the spreadsheets.
 
 It is not necessary for the function name to be upper case. However, following [Google recommendations](https://developers.google.com/apps-script/guides/sheets/functions#naming), the function will be upper case in the compiled `google.js` file.
 
