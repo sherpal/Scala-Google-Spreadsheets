@@ -51,7 +51,7 @@ object ExportedFunctions {
    */
   @JSExportTopLevel("CUSTOMSUM")
   def sum(elems: js.Array[js.Array[Data]]): Double = {
-    Cell.fromJSArray(elems).flatten.filter(_.isNumeric).map(_.toDouble).sum
+    Cell.fromJSArray(elems).flatten.filter(_.isNumeric).map(_.toDouble.get).sum
   }
 
 
@@ -96,8 +96,8 @@ object ExportedFunctions {
 
   private def rowToPerson(row: Vector[Cell]): Person = Person(
     row(0).value.asInstanceOf[String], row(1).value.asInstanceOf[String],
-    row(2).toDate, if (row(3).value.asInstanceOf[String] == "M") Male else Female,
-    row(4).toDouble
+    row(2).toDate.get, if (row(3).value.asInstanceOf[String] == "M") Male else Female,
+    row(4).toDouble.get
   )
 
 
@@ -150,6 +150,7 @@ object ExportedFunctions {
     val tol: Double = 0.000001
     val maxIteration: Int = 200
 
+    @scala.annotation.tailrec
     def makeIterations(prevTheta: Vector[Double], prevCost: Double, alpha: Double, iteration: Int): Vector[Double] = {
       if (iteration > maxIteration) prevTheta
       else {
@@ -183,8 +184,8 @@ object ExportedFunctions {
     try {
       val startTime = js.Date.now
       val result = Vector(linearRegression(
-        Cell.fromJSArray(trainingDataX).map(_.map(_.toDouble)),
-        Cell.fromJSArray(trainingDataY).map(_.head.toDouble)
+        Cell.fromJSArray(trainingDataX).map(_.map(_.toDouble.get)),
+        Cell.fromJSArray(trainingDataY).map(_.head.toDouble.get)
       ).map(new Cell(_)))
 
       (result :+ Vector(Cell("Time taken"), Cell(js.Date.now - startTime))).toGoogleCells

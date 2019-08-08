@@ -7,6 +7,7 @@ import scala.language.implicitConversions
 import scala.scalajs.js
 import scala.scalajs.js.|
 import scala.scalajs.js.JSConverters._
+import scala.util.Try
 
 /**
  * A Cell is simply a wrapper for values that we get from Google SpreadSheets.
@@ -33,21 +34,27 @@ final case class Cell(value: Data) {
     case _ => false
   }
 
-  def toDouble: Double = (value: Any) match {
-    case value: Double => value
-    case value: Int => value
-    case _ => throw new WrongDataTypeException(s"value ($value) data type is ${value.getClass}, but should be Double.")
+  def toDouble: Try[Double] = Try {
+    (value: Any) match {
+      case value: Double => value
+      case value: Int => value
+      case _ => throw new WrongDataTypeException(s"value ($value) data type is ${value.getClass}, but should be Double.")
+    }
   }
 
-  def toInt: Int = (value: Any) match {
-    case value: Double => value.toInt
-    case value: String => value.toInt
-    case _ => throw new WrongDataTypeException(s"value data type is ${value.getClass}, but should be Int.")
+  def toInt: Try[Int] = Try {
+    (value: Any) match {
+      case value: Double => value.toInt
+      case value: String => value.toInt
+      case _ => throw new WrongDataTypeException(s"value data type is ${value.getClass}, but should be Int.")
+    }
   }
 
-  def toDate: js.Date = value match {
-    case value: js.Date => value
-    case _ => throw new WrongDataTypeException(s"value data type is ${value.getClass}, but should be js.Date.")
+  def toDate: Try[js.Date] = Try {
+    value match {
+      case value: js.Date => value
+      case _ => throw new WrongDataTypeException(s"value data type is ${value.getClass}, but should be js.Date.")
+    }
   }
 
 }
@@ -58,7 +65,7 @@ object Cell {
   /** The type of Data that we can receive from Google SpreadSheets. */
   type Data = String | Double | Boolean | js.Date
 
-  /** Transposes the rows into columns. Thanks to implicit conversion, works also on js.Arrays of Data. */
+  /** Transposes the rows into columns. */
   def columns(row: Vector[Vector[Cell]]): Vector[Vector[Cell]] = row.transpose
 
   def toJSArray(cells: Seq[Seq[Cell]]): js.Array[js.Array[Data]] =
