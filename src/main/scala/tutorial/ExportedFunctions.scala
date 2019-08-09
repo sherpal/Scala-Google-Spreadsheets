@@ -1,8 +1,8 @@
 package tutorial
 
 import cells.Cell
-import cells.Cell.Data
-import cells.Cell.VectorToJS
+import cells.Cell._
+import cells.customfunctions.{Encoder, Input}
 import exceptions.WrongDataTypeException
 
 import scala.scalajs.js
@@ -53,6 +53,23 @@ object ExportedFunctions {
   def sum(elems: js.Array[js.Array[Data]]): Double = {
     Cell.fromJSArray(elems).flatten.filter(_.isNumeric).map(_.toDouble.get).sum
   }
+
+  @JSExportTopLevel("GETTYPES")
+  def types(elems: js.Array[js.Array[Data]]): js.Array[js.Array[Data]] =
+    elems.asScala.map(_.map(v => Cell(v.isEmpty))).toGoogleCells
+
+
+  final case class Foo(bar: String, babar: Int)
+
+  implicit val fooEncoder: Encoder[Vector[Foo]] =
+    (data: js.Array[js.Array[Data]]) => data.asScala.map(v => Foo(v(0).toString, v(1).toInt.get))
+
+  def countBigFoo(foos: Vector[Foo]): Int = foos.count(_.babar > 10)
+
+  import cells.customfunctions.customfunctionsimpl.CustomFunction1.FromFunction1
+
+  @JSExportTopLevel("COUNTBIGFOO")
+  def jsCountBigFoo(input: Input): js.Array[js.Array[Data]] = (countBigFoo _).asCustomFunction(input)
 
 
   /**

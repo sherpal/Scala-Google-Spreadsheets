@@ -21,8 +21,19 @@ final case class Cell(value: Data) {
   /** Returns whether the content is a Date. */
   def isDate: Boolean = value.isInstanceOf[js.Date]
 
-
   def isBoolean: Boolean = (value: Any).isInstanceOf[Boolean]
+
+  /** Returns whether this cell contains the empty string, which comes out of empty spreadsheet cells. */
+  def isEmpty: Boolean = (value: Any) match {
+    case s: String if s == "" => true
+    case _ => false
+  }
+
+  /** Maps the content of this cell via the function f. */
+  def map(f: Data => Data): Cell = Cell(f(value))
+
+  /** Returns wheter the cell actually contains something. */
+  def nonEmpty: Boolean = !isEmpty
 
   def ==(that: String): Boolean = (value: Any) match {
     case s: String => s == that
@@ -57,6 +68,8 @@ final case class Cell(value: Data) {
     }
   }
 
+  override def toString: String = value.toString
+
 }
 
 
@@ -72,7 +85,7 @@ object Cell {
     cells.map(_.map(_.value).toJSArray).toJSArray
 
   def fromJSArray(cells: js.Array[js.Array[Data]]): Vector[Vector[Cell]] =
-    cells.toList.map(fromJSFlatArray).toVector
+    cells.map(fromJSFlatArray).toVector
 
   def fromJSFlatArray(cells: js.Array[Data]): Vector[Cell] =
     cells.toVector.map(new Cell(_))
@@ -88,9 +101,11 @@ object Cell {
   //implicit def fromJS(value: Data): Cell = Cell(value)
 
   implicit class VectorToJS(cells: Vector[Vector[Cell]]) {
-
     def toGoogleCells: js.Array[js.Array[Data]] = toJSArray(cells)
+  }
 
+  implicit class JSToVector(cells: js.Array[js.Array[Data]]) {
+    def asScala: Vector[Vector[Cell]] = fromJSArray(cells)
   }
 
 }
