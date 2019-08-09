@@ -1,22 +1,15 @@
-package tutorial
+package tutorial.customfunctions
 
 import cells.Cell
-import cells.Cell._
-import cells.customfunctions.{Encoder, Input, Output}
 import cells.customfunctions.customfunctionsimpl.CustomFunction1.FromFunction1
 import cells.customfunctions.customfunctionsimpl.CustomFunction2.FromFunction2
+import cells.customfunctions.{Input, Output}
 
 import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.util.Try
 
 object CustomFunctionsAbstractionExamples {
 
-  final case class Foo(bar: String, babar: Int)
-
-  implicit val fooEncoder: Encoder[Vector[Foo]] =
-    (data: Output) => Try(
-      data.asScala.filterNot(_(0).isEmpty).map(v => Foo(v(0).toString, v(1).toInt.get))
-    )
 
   /** Counts the number of [[Foo]] for which `babar` is bigger than 10. */
   def countBigFoo(foos: Vector[Foo]): Int = foos.count(_.babar > 10)
