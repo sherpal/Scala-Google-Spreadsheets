@@ -6,17 +6,23 @@ import cells.Cell.VectorToJS
 
 import scala.scalajs.js
 
+/**
+ * A [[Decoder]] takes the result of a custom function, of type U, and decodes it as an [[Output]] in
+ * order to be sent back to the Google sheets.
+ *
+ * @tparam U type to decode as an [[Output]]
+ */
 trait Decoder[-U] {
 
-  def decodeU(u: U): js.Array[js.Array[Data]]
+  def decodeU(u: U): Output
 
-  final def apply(u: U): js.Array[js.Array[Data]] = decodeU(u)
+  final def apply(u: U): Output = decodeU(u)
 
 }
 
 object Decoder {
 
-  implicit final val identityDecoder: Decoder[js.Array[js.Array[Data]]] =
+  implicit final val identityDecoder: Decoder[Output] =
     (u: js.Array[js.Array[Data]]) => u
 
   implicit final val cellDecoder: Decoder[Vector[Vector[Cell]]] =

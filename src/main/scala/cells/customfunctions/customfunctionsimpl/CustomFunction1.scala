@@ -1,13 +1,18 @@
 package cells.customfunctions.customfunctionsimpl
 
-import cells.Cell.Data
-import cells.customfunctions.{Decoder, Encoder, Input}
+import cells.customfunctions.{Decoder, Encoder, Input, Output}
 
 import scala.scalajs.js
+import scala.util.{Failure, Success}
 
 final class CustomFunction1[-T, +U](f: T => U)(implicit encoder: Encoder[T], decoder: Decoder[U]) {
 
-  def apply(input: Input): js.Array[js.Array[Data]] = decoder(f(encoder(input)))
+  def apply(input: Input): Output = {
+    (for (arg <- encoder(input)) yield decoder(f(arg))) match {
+      case Success(value) => value
+      case Failure(e) => js.Array(js.Array(e.getMessage))
+    }
+  }
 
 }
 

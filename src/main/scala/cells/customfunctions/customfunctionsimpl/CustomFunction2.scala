@@ -1,9 +1,9 @@
 package cells.customfunctions.customfunctionsimpl
 
-import cells.Cell.Data
-import cells.customfunctions.{Decoder, Encoder, Input}
+import cells.customfunctions.{Decoder, Encoder, Input, Output}
 
 import scala.scalajs.js
+import scala.util.{Failure, Success}
 
 final class CustomFunction2[-T1, -T2, +U](f: (T1, T2) => U)
                                          (implicit
@@ -11,10 +11,17 @@ final class CustomFunction2[-T1, -T2, +U](f: (T1, T2) => U)
                                           encoder2: Encoder[T2],
                                           decoder: Decoder[U]) {
 
-  def apply(input1: Input, input2: Input): js.Array[js.Array[Data]] = {
-    val arg1 = encoder1(input1)
-    val arg2 = encoder2(input2)
-    decoder(f(arg1, arg2))
+  def apply(input1: Input, input2: Input): Output = {
+    (
+      for {
+        arg1 <- encoder1(input1)
+        arg2 <- encoder2(input2)
+        output = f(arg1, arg2)
+      } yield decoder(output)
+    ) match {
+      case Success(value) => value
+      case Failure(exception) => js.Array(js.Array(exception.getMessage))
+    }
   }
 
 }
