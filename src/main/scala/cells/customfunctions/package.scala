@@ -7,4 +7,6 @@ package object customfunctions {
 
   type Input = cells.Cell.Data | js.Array[js.Array[cells.Cell.Data]]
 
+  type Output = js.Array[js.Array[cells.Cell.Data]]
+
 }

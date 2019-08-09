@@ -102,6 +102,8 @@ object Cell {
 
   implicit class VectorToJS(cells: Vector[Vector[Cell]]) {
     def toGoogleCells: js.Array[js.Array[Data]] = toJSArray(cells)
+
+    def deepMap[U](f: Cell => U): Vector[Vector[U]] = cells.map(_.map(f))
   }
 
   implicit class JSToVector(cells: js.Array[js.Array[Data]]) {

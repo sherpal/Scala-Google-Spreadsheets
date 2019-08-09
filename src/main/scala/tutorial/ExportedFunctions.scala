@@ -58,20 +58,6 @@ object ExportedFunctions {
   def types(elems: js.Array[js.Array[Data]]): js.Array[js.Array[Data]] =
     elems.asScala.map(_.map(v => Cell(v.isEmpty))).toGoogleCells
 
-
-  final case class Foo(bar: String, babar: Int)
-
-  implicit val fooEncoder: Encoder[Vector[Foo]] =
-    (data: js.Array[js.Array[Data]]) => data.asScala.map(v => Foo(v(0).toString, v(1).toInt.get))
-
-  def countBigFoo(foos: Vector[Foo]): Int = foos.count(_.babar > 10)
-
-  import cells.customfunctions.customfunctionsimpl.CustomFunction1.FromFunction1
-
-  @JSExportTopLevel("COUNTBIGFOO")
-  def jsCountBigFoo(input: Input): js.Array[js.Array[Data]] = (countBigFoo _).asCustomFunction(input)
-
-
   /**
    * Below is an example of actually using Scala code for treating data in the spreadsheet.
    *
