@@ -34,10 +34,10 @@ object CustomFunctionsAbstractionExamples {
 
 
   def sumByCategory(categories: Vector[Vector[String]], values: Vector[Vector[Try[Int]]]): Vector[Vector[Cell]] = {
-    categories.flatten.zip(values.flatten.map(_.getOrElse(0)))
+    categories.flatten.zip(values.flatten)
       .filterNot(_._1.isEmpty)
-      .groupBy(_._1)
-      .view.mapValues(_.map(_._2).sum)
+      .map { case (cat, maybeValue) => cat -> maybeValue.get }
+      .groupMapReduce(_._1)(_._2)(_ + _)
       .toVector
       .map { case (cat, value) => Vector(Cell(cat), Cell(value)) }
   }

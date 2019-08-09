@@ -27,6 +27,9 @@ trait Encoder[+T] {
 
 object Encoder {
 
+  implicit final val stringEncoder: Encoder[String] =
+    (data: Output) => Try(data(0)(0).toString)
+
   implicit final val cellsEncoder: Encoder[Vector[Vector[Cell]]] =
     (data: Output) => Try(data.asScala)
 

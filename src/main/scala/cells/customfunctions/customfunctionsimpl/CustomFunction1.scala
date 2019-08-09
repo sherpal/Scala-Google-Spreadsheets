@@ -5,7 +5,9 @@ import cells.customfunctions.{Decoder, Encoder, Input, Output}
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
-final class CustomFunction1[-T, +U](f: T => U)(implicit encoder: Encoder[T], decoder: Decoder[U]) {
+final class CustomFunction1[-T, +U](f: T => U)
+                                   (implicit encoder: Encoder[T], decoder: Decoder[U])
+  extends (Input => Output) {
 
   def apply(input: Input): Output = {
     (for (arg <- encoder(input)) yield decoder(f(arg))) match {
