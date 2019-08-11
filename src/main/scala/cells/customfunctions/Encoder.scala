@@ -30,6 +30,18 @@ object Encoder {
   implicit final val stringEncoder: Encoder[String] =
     (data: Output) => Try(data(0)(0).toString)
 
+  implicit final val intEncoder: Encoder[Int] =
+    (data: Output) => Try(data(0)(0).asInstanceOf[Double].toInt)
+
+  implicit final val doubleEncoder: Encoder[Double] =
+    (data: Output) => Try(data(0)(0).asInstanceOf[Double])
+
+  implicit final val dateEncoder: Encoder[js.Date] =
+    (data: Output) => Try(data(0)(0).asInstanceOf[js.Date])
+
+  implicit final val booleanEncoder: Encoder[Boolean] =
+    (data: Output) => Try(data(0)(0).asInstanceOf[Boolean])
+
   implicit final val cellsEncoder: Encoder[Vector[Vector[Cell]]] =
     (data: Output) => Try(data.asScala)
 
